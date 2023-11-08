@@ -4,107 +4,94 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPG_Map
+class RPGMap
 {
-    internal class Program
+    private char[,] map =
     {
-        static void Main(string[] args)
+        {'^', '^', '^'},
+        {'^', '^', '^'},
+        {'^', '^', '^'}
+    };
+
+    private int playerRow = 1;
+    private int playerCol = 1;
+
+    public void DisplayMap()
+    {
+        Console.Clear();
+        Console.WriteLine("+--+");
+        for (int a = 0; a < map.GetLength(0); a++)
         {
-            Console.WriteLine("RPG Map");
-            Console.WriteLine("WASD to move");
-            Console.WriteLine("----");
-            Console.WriteLine();
-
-            int borderX = 21;
-            int borderY = 11;
-            int PlayerX = borderX / 2;
-            int PlayerY = borderY / 2;
-            ConsoleKeyInfo key = Console.ReadKey();
-
-            // Print horizontal borders
-            for (int x = 0; x < borderX; x++)
+            Console.Write("|");
+            for (int b = 0; b < map.GetLength(1); b++)
             {
-                Console.SetCursorPosition(x, 0);
-                Console.Write("-");
-                Console.SetCursorPosition(x, borderY - 1);
-                Console.Write("-");
-            }
-
-            // Print vertical borders
-            for (int y = 1; y < borderY - 1; y++)
-            {
-                Console.SetCursorPosition(0, y);
-                Console.Write("|");
-                Console.SetCursorPosition(borderX - 1, y);
-                Console.Write("|");
-            }
-
-
-            //Print the map for the Player
-            int width = 20;
-            int height = 10;
-            for (int a = 1; a <= width - 1; a++)
-            {
-                for (int b = 1; b <= height - 1; b++)
+                if (a == playerRow && b == playerCol)
                 {
-                    Console.SetCursorPosition(a, b);
-                    Console.WriteLine("^");
+                    Console.Write('*');
+                }
+                else
+                {
+                    Console.Write(map[a, b]);
                 }
             }
+            Console.WriteLine("|");
+        }
+        Console.WriteLine("+--+");
+    }
 
-            //Print Player 
-            Console.SetCursorPosition (PlayerX, PlayerY);
-            Console.WriteLine("*");
-            while (true) 
-            {
-                key = Console.ReadKey(true);
 
-                switch (key.Key)
+
+    public void MovePlayer(ConsoleKeyInfo key)
+    {
+        switch (key.Key)
+        {
+            case ConsoleKey.UpArrow:
+                if (playerRow > 0)
                 {
-                    case ConsoleKey.W:
-                        if (PlayerY > 1) PlayerY--; break;
-
-                    case ConsoleKey.S:
-                        if (PlayerY < height - 1) PlayerY++; break;
-
-                    case ConsoleKey.D:
-                        if (PlayerX < width - 1) PlayerX++; break;
-
-                    case ConsoleKey.A:
-                        if (PlayerX > 1) PlayerX--; break;
+                    map[playerRow, playerCol] = '^';
+                    playerRow--;
+                    map[playerRow, playerCol] = '*';
                 }
-                Console.Clear();
-
-                for (int x = 0; x < borderX; x++)
+                break;
+            case ConsoleKey.DownArrow:
+                if (playerRow < map.GetLength(0) - 1)
                 {
-                    Console.SetCursorPosition(x, 0);
-                    Console.Write("-");
-                    Console.SetCursorPosition(x, borderY - 1);
-                    Console.Write("-");
+                    map[playerRow, playerCol] = '^';
+                    playerRow++;
+                    map[playerRow, playerCol] = '*';
                 }
-
-                // Print vertical borders
-                for (int y = 1; y < borderY - 1; y++)
+                break;
+            case ConsoleKey.LeftArrow:
+                if (playerCol > 0)
                 {
-                    Console.SetCursorPosition(0, y);
-                    Console.Write("|");
-                    Console.SetCursorPosition(borderX - 1, y);
-                    Console.Write("|");
+                    map[playerRow, playerCol] = '^';
+                    playerCol--;
+                    map[playerRow, playerCol] = '*';
                 }
-
-                // Print the map for the Player
-                for (int a = 1; a <= width - 1; a++)
+                break;
+            case ConsoleKey.RightArrow:
+                if (playerCol < map.GetLength(1) - 1)
                 {
-                    for (int b = 1; b <= height - 1; b++)
-                    {
-                        Console.SetCursorPosition(a, b);
-                        Console.Write("^");
-                    }
+                    map[playerRow, playerCol] = '^';
+                    playerCol++;
+                    map[playerRow, playerCol] = '*';
                 }
-                Console.SetCursorPosition(PlayerX, PlayerY);
-                Console.WriteLine("*");
+                break;
+        }
+    }
+}
 
-            } 
+class Program
+{
+    static void Main(string[] args)
+    {
+        RPGMap rpgMap = new RPGMap();
+
+        while (true)
+        {
+            rpgMap.DisplayMap();
+            ConsoleKeyInfo key = Console.ReadKey(true);
+            rpgMap.MovePlayer(key);
         }
     }
 }
