@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 class RPGMap
 {
     private static char[,] map =
-    {
+   {
         {'^','^','^','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`'},
         {'^','^','`','`','`','`','*','*','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','~','~','~','`','`','`'},
         {'^','^','`','`','`','*','*','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','~','~','~','`','`','`','`','`'},
@@ -21,24 +21,48 @@ class RPGMap
         {'`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`'}
     };
 
-    private void ColorCharacters(char character, ConsoleColor color)
-    {
-        Console.ForegroundColor = color;
-        Console.WriteLine(character);
-        Console.ResetColor();
-    }
+    //usage: map[a,b]
 
+    //Map Legend:
+    // ` = Grass
+    // ~ = Water
+    // * = Trees
+    // ^ = Mountains
+
+    private void ColorMap(char color)
+    {
+        switch (color)
+        {
+            case '^':
+                Console.ForegroundColor = ConsoleColor.DarkGray; 
+                break;
+            case '*':
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                break;
+            case '~':
+                Console.ForegroundColor = ConsoleColor.Blue;
+                break;
+            case '`':
+                Console.ForegroundColor = ConsoleColor.Green;
+                break;
+            default:
+                Console.ForegroundColor = ConsoleColor.White;
+                break;
+        }
+    }
 
     public void DisplayMap()
     {
         Console.WriteLine("+" + new string('-', map.GetLength(1)) + "+");
-        for (int i = 0; i < map.GetLength(0); i++)
+        for (int a = 0;  a < map.GetLength(0); a++)
         {
             Console.Write("|");
-            for (int j = 0; j < map.GetLength(1); j++)
+            for (int b = 0; b < map.GetLength(1); b++)
             {
-                Console.Write(map[i, j]);
+                ColorMap(map[a, b]);
+                Console.Write(map[a, b]);
             }
+            Console.ResetColor();
             Console.WriteLine("|");
         }
         Console.WriteLine("+" + new string('-', map.GetLength(1)) + "+");
@@ -46,47 +70,53 @@ class RPGMap
 
     public void DisplayMap(int scale)
     {
-        Console.WriteLine("+" + new string('-', map.GetLength(1) * scale) + "+");
-        for (int i = 0; i < map.GetLength(0); i++)
+        Console.WriteLine("+" + new string('-', map.GetLength (1) * scale) + "+");
+        for (int a = 0; a < map.GetLength(0); a++)
         {
-            for (int rowScale = 0; rowScale < scale; rowScale++)
+            for (int aRowScale = 0; aRowScale < scale; aRowScale++)
             {
                 Console.Write("|");
-                for (int j = 0; j < map.GetLength(1); j++)
+                for (int b = 0; b < map.GetLength(1); b++)
                 {
-                    for (int colScale = 0; colScale < scale; colScale++)
+                    for(int bRowScale = 0;bRowScale < scale; bRowScale++)
                     {
-                        Console.Write(map[i, j]);
+                        ColorMap(map[a,b]);
+                        Console.Write(map[a,b]);
                     }
                 }
+                Console.ResetColor();
                 Console.WriteLine("|");
             }
         }
         Console.WriteLine("+" + new string('-', map.GetLength(1) * scale) + "+");
     }
-
-    private ConsoleColor
 }
 
 class Program
 {
     static void Main(string[] args)
     {
-        RPGMap rpgMap = new RPGMap();
+        RPGMap map = new RPGMap();
 
-        Console.WriteLine("Unscaled Map:");
-        rpgMap.DisplayMap();
+        Console.WriteLine("OG Map");
+        map.DisplayMap();
         Console.WriteLine();
 
-        Console.WriteLine("Scaled Map (2x):");
-        rpgMap.DisplayMap(2);
+        Console.WriteLine("Scaled Map 2x");
+        map.DisplayMap(2);
         Console.WriteLine();
 
-        Console.WriteLine("Scaled Map (3x):");
-        rpgMap.DisplayMap(5);
-        Console.ReadKey();
+        Console.WriteLine("Scaled Map 3x");
+        map.DisplayMap(3);
+        Console.WriteLine();
+
+        Console.WriteLine("Scaled Map 5x");
+        map.DisplayMap(5);
+        Console.WriteLine();
+
+        Console.WriteLine("Scaled Map 7x");
+        map.DisplayMap(7);
+        Console.ReadKey(true);
     }
 }
-
-
 
