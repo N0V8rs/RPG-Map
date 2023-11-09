@@ -3,82 +3,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 class RPGMap
 {
-    private char[,] map =
+    private static char[,] map =
     {
-        {'^', '^', '^'},
-        {'^', '^', '^'},
-        {'^', '^', '^'}
+        {'^','^','^','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`'},
+        {'^','^','`','`','`','`','*','*','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','~','~','~','`','`','`'},
+        {'^','^','`','`','`','*','*','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','~','~','~','`','`','`','`','`'},
+        {'^','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`'},
+        {'`','`','`','`','~','~','~','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`'},
+        {'`','`','`','`','~','~','~','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`'},
+        {'`','`','`','~','~','~','~','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','^','^','`','`','`','`','`','`'},
+        {'`','`','`','`','`','~','~','~','`','`','`','`','`','`','`','`','`','`','`','`','`','^','^','^','^','`','`','`','`','`'},
+        {'`','`','`','`','`','~','~','~','~','`','`','`','`','`','`','`','`','`','`','`','`','`','`','^','^','^','^','`','`','`'},
+        {'`','`','`','`','`','`','`','~','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`'},
+        {'`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`'},
+        {'`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`','`'}
     };
 
-    private int playerRow = 1;
-    private int playerCol = 1;
+    private void ColorCharacters(char character, ConsoleColor color)
+    {
+        Console.ForegroundColor = color;
+        Console.WriteLine(character);
+        Console.ResetColor();
+    }
+
 
     public void DisplayMap()
     {
-        Console.Clear();
-        Console.WriteLine("+--+");
-        for (int a = 0; a < map.GetLength(0); a++)
+        Console.WriteLine("+" + new string('-', map.GetLength(1)) + "+");
+        for (int i = 0; i < map.GetLength(0); i++)
         {
             Console.Write("|");
-            for (int b = 0; b < map.GetLength(1); b++)
+            for (int j = 0; j < map.GetLength(1); j++)
             {
-                if (a == playerRow && b == playerCol)
-                {
-                    Console.Write('*');
-                }
-                else
-                {
-                    Console.Write(map[a, b]);
-                }
+                Console.Write(map[i, j]);
             }
             Console.WriteLine("|");
         }
-        Console.WriteLine("+--+");
+        Console.WriteLine("+" + new string('-', map.GetLength(1)) + "+");
     }
 
-
-
-    public void MovePlayer(ConsoleKeyInfo key)
+    public void DisplayMap(int scale)
     {
-        switch (key.Key)
+        Console.WriteLine("+" + new string('-', map.GetLength(1) * scale) + "+");
+        for (int i = 0; i < map.GetLength(0); i++)
         {
-            case ConsoleKey.UpArrow:
-                if (playerRow > 0)
+            for (int rowScale = 0; rowScale < scale; rowScale++)
+            {
+                Console.Write("|");
+                for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    map[playerRow, playerCol] = '^';
-                    playerRow--;
-                    map[playerRow, playerCol] = '*';
+                    for (int colScale = 0; colScale < scale; colScale++)
+                    {
+                        Console.Write(map[i, j]);
+                    }
                 }
-                break;
-            case ConsoleKey.DownArrow:
-                if (playerRow < map.GetLength(0) - 1)
-                {
-                    map[playerRow, playerCol] = '^';
-                    playerRow++;
-                    map[playerRow, playerCol] = '*';
-                }
-                break;
-            case ConsoleKey.LeftArrow:
-                if (playerCol > 0)
-                {
-                    map[playerRow, playerCol] = '^';
-                    playerCol--;
-                    map[playerRow, playerCol] = '*';
-                }
-                break;
-            case ConsoleKey.RightArrow:
-                if (playerCol < map.GetLength(1) - 1)
-                {
-                    map[playerRow, playerCol] = '^';
-                    playerCol++;
-                    map[playerRow, playerCol] = '*';
-                }
-                break;
+                Console.WriteLine("|");
+            }
         }
+        Console.WriteLine("+" + new string('-', map.GetLength(1) * scale) + "+");
     }
+
+    private ConsoleColor
 }
 
 class Program
@@ -87,11 +74,19 @@ class Program
     {
         RPGMap rpgMap = new RPGMap();
 
-        while (true)
-        {
-            rpgMap.DisplayMap();
-            ConsoleKeyInfo key = Console.ReadKey(true);
-            rpgMap.MovePlayer(key);
-        }
+        Console.WriteLine("Unscaled Map:");
+        rpgMap.DisplayMap();
+        Console.WriteLine();
+
+        Console.WriteLine("Scaled Map (2x):");
+        rpgMap.DisplayMap(2);
+        Console.WriteLine();
+
+        Console.WriteLine("Scaled Map (3x):");
+        rpgMap.DisplayMap(5);
+        Console.ReadKey();
     }
 }
+
+
+
